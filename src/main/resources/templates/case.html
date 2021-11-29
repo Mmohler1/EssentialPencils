@@ -1,0 +1,82 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="layouts/defaultTemplate">
+	<head>
+		<title>Pencil Case</title>
+	</head>
+	 
+	<body>
+		<div layout:fragment="content">
+			<h4>Pencil Case</h2>
+
+			<table class="utensil-table" style="width:50%">
+				<thead>
+					<tr>
+						<th style="text-align:center">Type</th>
+						<th style="text-align:center">Brand</th>						
+						<th style="text-align:center">Color</th>
+						<th style="text-align:center">Quantity</th>
+						<th style="text-align:center">Size</th>
+						<th style="text-align:center">Action</th>	
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:if="${utensils.empty}">
+						<td style="text-align:center" colspan="6"> No Utensils Added </td>
+					</tr>
+	
+					<tr th:each="utensil : ${utensils}">
+				
+						<td style="text-align:center"><h5 th:text="${utensil.type}">Pencil</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensil.brand}">Brand</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensil.color}">Black</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensil.quantity}">3</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensil.size}">Small</h5></td>
+						
+						
+						<td style="text-align:center">
+							<table>
+								<tr>
+									<form action="#" th:action="@{/case/goUpdate}" th:object="${utensilModel}" method="post">
+										
+										<input type="hidden" id="utensilId" name="utensilId" th:value="${utensil.utensilId}"> 
+										<input type="hidden" id="type" name="type" th:value="${utensil.type}">
+										<input type="hidden" id="brand" name="brand" th:value="${utensil.brand}">
+										<input type="hidden" id="color" name="color" th:value="${utensil.color}">
+										<input type="hidden" id="quantity" name="quantity" th:value="${utensil.quantity}">
+										<input type="hidden" id="size" name="size" th:value="${utensil.size}">
+										<td colspan="2"><input type="submit" value="Update"></td>
+									</form>
+									
+									<form action="#" th:action="@{/case/doDelete}" th:object="${utensilModel}" method="post" onsubmit="return confirm('Are you sure you want to delete this utensil?')">
+										<input type="hidden" id="utensilId" name="utensilId" th:value="${utensil.utensilId}">
+										<td colspan="3"><input id="myDelete" type="submit" value="Delete"></td>
+									</form>
+									
+									<form action="#" th:action="@{/case/goDetail}" th:object="${utensilModel}" method="post">
+										
+										<input type="hidden" id="utensilId" name="utensilId" th:value="${utensil.utensilId}"> 
+										<input type="hidden" id="userId" name="userId" th:value="${utensil.userId}"> 
+										<input type="hidden" id="type" name="type" th:value="${utensil.type}">
+										<input type="hidden" id="brand" name="brand" th:value="${utensil.brand}">
+										<input type="hidden" id="color" name="color" th:value="${utensil.color}">
+										<input type="hidden" id="quantity" name="quantity" th:value="${utensil.quantity}">
+										<input type="hidden" id="size" name="size" th:value="${utensil.size}">
+										<td colspan="2"><input type="submit" value="Detailed"></td>
+									</form>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+				
+			</table>
+			<form action="#" th:action="@{/case/goAdd}" method="get">
+				<td colspan="1"><input type="submit" value="Add"></td>
+			</form>
+		</div>
+		
+		<!-- Used to Confirm Delete -->
+
+	</body>
+</html>

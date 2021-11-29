@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="layouts/defaultTemplate">
+
+	<head>
+		<title>Essential Pencils</title>
+	</head>
+	 
+	<body>
+		<div layout:fragment="content">
+			<div>Welcome to the best place to catalogue your art supplies! Please sign in or register below!</div>
+			<div th:text="${session.username}">Maybe</div>
+			<table>
+				<tr>
+				<form action="#" th:action="@{goLogin}" method="get">
+					<td colspan="3"><input type="submit" value="Login"></td>
+				</form>
+				
+				<form action="#" th:action="@{goRegister}" method="get">
+					<td colspan="3"><input type="submit" value="Register"></td>
+				</form>
+				
+				</tr>	
+			</table>
+		</div>
+	</body>
+</html>

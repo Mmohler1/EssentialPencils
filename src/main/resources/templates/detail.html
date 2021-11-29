@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="layouts/defaultTemplate">
+	<head>
+		<title>Pencil Case</title>
+	</head>
+	 
+	<body>
+		<div layout:fragment="content">
+			<h4>Pencil Case</h2>
+
+			<table class="utensil-table" style="width:50%">
+				<thead>
+					<tr>
+						<th style="text-align:center">Untensil ID</th>
+						<th style="text-align:center">User ID</th>
+						<th style="text-align:center">Type</th>
+						<th style="text-align:center">Brand</th>						
+						<th style="text-align:center">Color</th>
+						<th style="text-align:center">Quantity</th>
+						<th style="text-align:center">Size</th>	
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+				
+						<td style="text-align:center"><h5 th:text="${utensilModel.utensilId}">3</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensilModel.userId}">1</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensilModel.type}">Pencil</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensilModel.brand}">Brand</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensilModel.color}">Black</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensilModel.quantity}">3</h5></td>
+						<td style="text-align:center"><h5 th:text="${utensilModel.size}">Small</h5></td>
+								
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<!-- Used to Confirm Delete -->
+
+	</body>
+</html>

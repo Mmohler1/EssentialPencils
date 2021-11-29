@@ -1,0 +1,57 @@
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="layouts/defaultTemplate">
+
+	<head>
+		<title>Update Utensil</title>
+	</head>
+	 
+	<body>
+		<div layout:fragment="content">
+			<div class="pretty-box">
+				<form action="#" th:action="@{/case/doUpdate}" th:object="${utensilModel}" method="post">
+					<input type="hidden" th:field="*{utensilId}">
+					<table>
+						<tr>
+							
+							<td>Type: </td><td><input type="text" th:field="*{type}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"> Type Error</h5></td>
+						</tr>
+						<tr>
+							<td>Brand: </td><td><input type="text" th:field="*{brand}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"> Brand Error</h5></td>
+						</tr>
+						<tr>
+							<td>Color: </td><td><input type="text" th:field="*{color}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('color')}" th:errors="*{color}"> Color Error</h5></td>
+						</tr>
+						<tr>
+							<td>Quantity: </td><td><input type="text" th:field="*{quantity}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"> Quantity Error</h5></td>
+						</tr>
+						<tr>
+							<td>Size: </td><td><select type="select" th:field="*{size}"> 
+													<option value="Very Large">Very Large</option>
+													<option value="Large">Large</option> 
+													<option value="Medium">Medium</option> 
+													<option value="Small">Small</option>
+													<option value="Very Small">Very Small</option>  
+												</select> 
+							
+							</td> <td><h5 style="color:red" th:if="${#fields.hasErrors('size')}" th:errors="*{size}"> Size Error</h5></td>
+						</tr>
+	
+						<tr>
+							<td><br></td>
+						</tr>
+						<tr>
+							<td style="text-align:center;"colspan="3"><input type="submit" value="Update" ></td>
+						</tr>	
+					</table>
+					<br/>
+					<div class="error" th:text="${errorMessage}"></div>
+					<div th:if="${#fields.hasErrors('*')}">List of Errors</div>
+					<div th:each="err : ${#fields.errors('*')}">
+						<span style="color:red" th:text="${err}" class="fieldError"></span>
+					</div>
+				</form>			
+			</div>
+		</div>
+	</body>
+</html>
