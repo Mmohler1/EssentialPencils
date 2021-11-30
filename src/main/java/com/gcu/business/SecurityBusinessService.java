@@ -30,7 +30,7 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 	@Autowired
 	private UserDataAccessInterface<RegisterModel> service;
 	
-	//Needed to set the session varaibles
+	//Needed to set the session variables
 	@Autowired 
 	 private HttpSession session;
 	
@@ -58,24 +58,35 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 	}
 	
 	
+	/**
+	 * Search the username in the Database by calling the DAO. If it exists grant authority and
+	 * set the session for the user so they application can work like it did before the security.
+	 * 
+	 * @param username String that holds the username the security is trying to search
+	 * @return LoginModel Now that LoginModel implements UserDetails it can now fit the security. 
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException 
 	{
 		RegisterModel user = service.findByUsername(username);
 		
+		//If user exists then send them back with granted authority
 		if(user != null)
 		{
+			
 			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 			authorities.add(new SimpleGrantedAuthority("USER"));
 			
+			//Add session for username and Id
 			session.setAttribute("username", user.getUsername());
 			session.setAttribute("id", user.getId());
 			
+			//Return UserDetails back to security
 			return new LoginModel(user.getUsername(), user.getPassword(), authorities);
 		}
 		else
 		{
-			
+			//Throw Error, currently does not work. 
 			throw new UsernameNotFoundException("Username not found");
 		}
 	}

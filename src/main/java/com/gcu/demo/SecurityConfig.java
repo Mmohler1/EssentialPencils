@@ -12,15 +12,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gcu.business.SecurityBusinessService;
 
+/**
+ * Security Configuration for the Spring Boot Application. 
+ * 
+ * @author Micahel M.
+ *
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 { 
+	//Used for encryption
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	@Autowired
-	SecurityBusinessService service;
 	
 	@Bean
 	BCryptPasswordEncoder passwordEncoder()
@@ -28,6 +33,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		return new BCryptPasswordEncoder();
 	}
 	
+	//Used to access user in database
+	@Autowired
+	SecurityBusinessService service;
+	
+	/**
+	 * Sets up the security for the application. What is whitelisted, where the user is taken, what is the name of the login page,e tc
+	 * 
+	 * @param http Security for Spring Boot
+	 * 
+	 *  
+	 */
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
@@ -52,6 +68,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 			.logoutSuccessUrl("/");
 	}
 	
+	
+	/**
+	 * Insert the username from the service and tell it which encryption is being used for the password.
+	 * 
+	 * @param auth security authorization for the application
+	 */
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception
 	{
@@ -60,9 +82,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		auth 
 		.userDetailsService(service)
 		.passwordEncoder(passwordEncoder);
-		
-		
-
-		
+			
 	}
 }

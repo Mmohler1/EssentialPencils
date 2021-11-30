@@ -89,6 +89,7 @@ public class RandomController
 		if(amount <= 0)
 		{
 			String errorMessage = "Please pick a number more then 0.";
+			utensils = new ArrayList<UtensilModel>();
 			
 			//Loads utensil list into the pages view. 
 			model.addAttribute("title", "Random Page");
