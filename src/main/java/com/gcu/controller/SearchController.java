@@ -87,18 +87,33 @@ public class SearchController
 		//If user enters nothing then prevent their entire utensil list from showing
 		if(searchTerm == "")
 		{
+			//Make sure no utensil is shown
+			utensils = new ArrayList<UtensilModel>();
+			
 			//Add error message to tell user to enter something
 			String errorMessage = "Please enter something in the search bar.";
+			model.addAttribute("utensils", utensils);
+			model.addAttribute("errorMessage", errorMessage);
+			return "search";
+		}
+		
+		//Call service and try to find searched item
+		utensils = service.displaySearchedUtensil(newUtensil);
+		
+		//If nothing is found
+		if (utensils.isEmpty())
+		{
+			//Make sure no utensil is shown
+			utensils = new ArrayList<UtensilModel>();
+			
+			//Add error message to tell user to enter something
+			String errorMessage = "No Utensils were found. Please try narrowing your search.";
+			model.addAttribute("utensils", utensils);
 			model.addAttribute("errorMessage", errorMessage);
 		}
-		else
-		{
-			//Call service and try to find searched item
-			utensils = service.displaySearchedUtensil(newUtensil);
-		}
+
 		
 		
-	
 		//Take the user back to the Utensil page with attributes.
 		model.addAttribute("title", "Search Utensil");
 		model.addAttribute("utensils", utensils);

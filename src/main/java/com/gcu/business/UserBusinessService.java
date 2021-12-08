@@ -1,10 +1,12 @@
 package com.gcu.business;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gcu.data.DataAccessInterface;
+
 import com.gcu.model.RegisterModel;
 
 
@@ -20,6 +22,7 @@ public class UserBusinessService implements UserBusinessServiceInterface {
 
 	@Autowired
 	private DataAccessInterface<RegisterModel> service;
+	
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -40,5 +43,6 @@ public class UserBusinessService implements UserBusinessServiceInterface {
 		
 		return service.create(newRegister);	
 	}
+	
 
 }

@@ -187,4 +187,31 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 		
 	}
 
+
+	/**
+	 * Calls DAO to pull utensil from database.
+	 * 
+	 * @param id of the utensil in database 
+	 * 
+	 * @return utensil model of the utensil that matches the id. 
+	 */
+	@Override
+	public UtensilModel getUtensilById(int id) 
+	{
+		return serviceUtensil.findById(id);
+	}
+	
+	
+	/**
+	 * Calls DAO to pull every utensil from database.
+	 * 
+
+	 * @return List of utensils. 
+	 */
+	@Override
+	public List<UtensilModel> getEveryUtensil() 
+	{
+		return serviceUtensil.findAllUtensils();
+	}
+
 }

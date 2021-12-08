@@ -1,12 +1,9 @@
 package com.gcu.model;
 
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Date:10/01/2021
@@ -17,12 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @version 2.
  *
  */
-public class LoginModel implements UserDetails
+public class LoginModel
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 
 	//Instance Variables
 	private int id;
@@ -33,8 +27,6 @@ public class LoginModel implements UserDetails
 	
 	@NotNull(message="Password is a required field")
 	private String password;
-	
-	private List<GrantedAuthority> authorities;
 
 	
 	public LoginModel(int id, String username, String password) {
@@ -42,19 +34,6 @@ public class LoginModel implements UserDetails
 		this.username = username;
 		this.password = password;
 	}
-	
-	
-	//Constructor to handle the security
-	public LoginModel(
-			@NotNull(message = "User name is a required field") @Size(min = 1, max = 32, message = "User name must be between 1 and 32 characters") String username,
-			@NotNull(message = "Password is a required field") String password,
-			List<GrantedAuthority> authorities) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.authorities = authorities;
-	}
-
 
 
 	//Default constructor
@@ -65,7 +44,7 @@ public class LoginModel implements UserDetails
 		password = "P@S5w0Rd";
 		
 	}
-	
+	 
 	//Getters and Setters
 	
 	public int getId() {
@@ -87,46 +66,6 @@ public class LoginModel implements UserDetails
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
-	public List<GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-
-	public void setAuthorities(List<GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-
-
-	//For User Details
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
 	
 	
 }

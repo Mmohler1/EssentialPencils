@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -63,7 +64,7 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 	 * set the session for the user so they application can work like it did before the security.
 	 * 
 	 * @param username String that holds the username the security is trying to search
-	 * @return LoginModel Now that LoginModel implements UserDetails it can now fit the security. 
+	 * @return User model with the username, password, and role of the user.
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException 
@@ -82,7 +83,7 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 			session.setAttribute("id", user.getId());
 			
 			//Return UserDetails back to security
-			return new LoginModel(user.getUsername(), user.getPassword(), authorities);
+			return new User(user.getUsername(), user.getPassword(), authorities);
 		}
 		else
 		{
@@ -90,14 +91,5 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 			throw new UsernameNotFoundException("Username not found");
 		}
 	}
-
-
-	@Override
-	public int authenticateLogin(LoginModel loginModel) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-
 
 }

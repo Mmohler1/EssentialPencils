@@ -1,8 +1,9 @@
 package com.gcu.business;
 
+
 import com.gcu.model.RegisterModel;
 
-/*
+/**
  * Date: 10/12/21
  * Interface for the Register service pages
  * 
@@ -12,4 +13,5 @@ import com.gcu.model.RegisterModel;
 public interface UserBusinessServiceInterface {
 
 	public int processRegister(RegisterModel registerModel);
+
 }

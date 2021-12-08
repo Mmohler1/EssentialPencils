@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.gcu.model.UtensilModel;
 
-/*
+/**
  * Date: 11/02/21
  * Interface for the business layer of the Utensil Product
  * 
@@ -20,4 +20,6 @@ public interface UtensilBusinessInterface
 	int eraseUtensil(UtensilModel utsenislModel);
 	public List<UtensilModel> displaySearchedUtensil(UtensilModel utensilModel);
 	public List<UtensilModel> getRandomizedUtensil(List<UtensilModel> utensilList, int amount);
+	public UtensilModel getUtensilById(int id);
+	public List<UtensilModel> getEveryUtensil();
 }

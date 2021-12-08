@@ -181,7 +181,8 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	 * @return int Used to determine what happened
 	 */
 	@Override
-	public int delete(UtensilModel utensilModel) {
+	public int delete(UtensilModel utensilModel) 
+	{
 		
 		String sql = "DELETE FROM `utensils` WHERE UTENSIL_ID = " + utensilModel.getUtensilId() + " AND USER_ID = " + utensilModel.getUserId() + ";";
 		
@@ -300,6 +301,100 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 					//Throw Database error
 					throw new DatabaseException("The Database is currently down.");
 				}
+	}
+
+
+
+	/**
+	 * Pull Utensil from database based on id.
+	 * 
+	 * @param id that matches utensil id in database
+	 * 
+	 * @return Utensil model of utensil from database.
+	 */
+	@Override
+	public UtensilModel findById(int id) {
+		
+		String sql = "SELECT * FROM UTENSILS WHERE UTENSIL_ID = '" + id + "';";
+		
+		UtensilModel utensil;
+		
+		
+		//Try to make a list of utensils
+		try
+		{
+			//For every row in the table make a utensil and add it to a list.
+			SqlRowSet srs = jdbcTemplateObject.queryForRowSet(sql);
+			if(srs.next())
+			{
+				utensil = new UtensilModel(srs.getInt("UTENSIL_ID"),
+											srs.getInt("USER_ID"),
+											srs.getString("TYPE"),
+											srs.getString("BRAND"),
+											srs.getString("COLOR"),
+											srs.getInt("QUANTITY"),
+											srs.getString("SIZE"));		
+			
+				return utensil;
+			}
+			else
+			{
+				return null;
+			}
+			
+			
+		}
+		catch (Exception e)
+		{
+			//Throw Database error
+			throw new DatabaseException("The Database is currently down.");
+		}
+	}
+
+
+	/**
+	 * Pulls every utensil in the database and returns it.
+	 * 
+	 * @return List of Utensil of every utensil found in database.
+	 */
+	@Override
+	public List<UtensilModel> findAllUtensils() 
+	{
+
+
+		
+		//SQL String that creates a view of every row that matches the user's id. 
+		String sql = "SELECT * FROM UTENSILS";
+		
+		//Initialize the list for the Utensil Models
+		List<UtensilModel> utensils = new ArrayList<UtensilModel>();
+		
+		
+		//Try to make a list of utensils
+		try
+		{
+			//For every row in the table make a utensil and add it to a list.
+			SqlRowSet srs = jdbcTemplateObject.queryForRowSet(sql);
+			while(srs.next())
+			{
+				utensils.add(new UtensilModel(srs.getInt("UTENSIL_ID"),
+											srs.getInt("USER_ID"),
+											srs.getString("TYPE"),
+											srs.getString("BRAND"),
+											srs.getString("COLOR"),
+											srs.getInt("QUANTITY"),
+											srs.getString("SIZE")));		
+			}	
+			
+			return utensils;
+		}
+		catch (Exception e)
+		{
+			//Throw Database error
+			throw new DatabaseException("The Database is currently down.");
+		}
+		
+
 	}
 
 }
