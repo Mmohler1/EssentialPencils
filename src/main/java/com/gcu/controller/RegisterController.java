@@ -72,6 +72,7 @@ public class RegisterController
 		if(bindingResult.hasErrors())
 		{
 			model.addAttribute("title", "Register Form");
+			model.addAttribute("registerModel", registerModel);
 			return "register";
 		}
 		else

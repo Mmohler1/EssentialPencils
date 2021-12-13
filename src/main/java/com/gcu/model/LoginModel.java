@@ -22,19 +22,24 @@ public class LoginModel
 	private int id;
 	
 	@NotNull(message="User name is a required field")
-	@Size(min=1, max=32, message="User name must be between 1 and 32 characters")
+	@Size(min=2, max=32, message="User name must be between 1 and 32 characters")
 	private String username;
 	
 	@NotNull(message="Password is a required field")
+	@Size(min=5, max=32, message="Password must be between 5 and 32 characters")
 	private String password;
 
 	
-	public LoginModel(int id, String username, String password) {
+
+
+	public LoginModel(int id,
+			@NotNull(message = "User name is a required field") @Size(min = 1, max = 32, message = "User name must be between 1 and 32 characters") String username,
+			@NotNull(message = "Password is a required field") String password) {
+		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 	}
-
 
 	//Default constructor
 	public LoginModel()

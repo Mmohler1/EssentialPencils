@@ -24,10 +24,10 @@ layout:decorate="layouts/defaultTemplate">
 						<td>Phone Number:</td><td><input type="text" th:field="*{phone}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"> Phone Number Error</h5></td>
 					</tr>
 					<tr>
-						<td>User Name:</td><td><input type="text" th:field="*{username}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"> User Name Error</h5></td>
+						<td>User Name:</td><td><input type="text" th:field="*{username}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('loginCred.username')}" th:errors="*{loginCred.username}"> User Name Error</h5></td>
 					</tr>
 					<tr>
-						<td>Password:</td><td><input type="password" th:field="*{password}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"> Password Error</h5></td>	
+						<td>Password:</td><td><input type="password" th:field="*{password}" ></td> <td><h5 style="color:red" th:if="${#fields.hasErrors('loginCred.password')}" th:errors="*{loginCred.password}"> Password Error</h5></td>	
 					</tr>
 					<tr>
 						<td><br></td>
