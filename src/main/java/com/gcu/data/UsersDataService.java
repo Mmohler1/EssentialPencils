@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -23,6 +25,8 @@ import com.gcu.utility.DatabaseException;
 @Service
 public class UsersDataService implements UserDataAccessInterface<RegisterModel>, DataAccessInterface<RegisterModel> 
 {
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(UsersDataService.class);
 
 	//Initialize the Data Source and JDBC
 	@SuppressWarnings("unused")
@@ -41,6 +45,12 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	{
 		this.dataSource = dataSource;
 		this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+		logger.info("Info: Hey");
+		logger.warn("Warning: Hi");
+		logger.trace("Trace: Yo");
+		logger.error("Error: F*ck off");
+		logger.debug("Debug: I'll look into his problem");
+		
 	}
 	
 	//Currently an empty list of users.
@@ -49,7 +59,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	{
 		
 		List<RegisterModel> users = new ArrayList<RegisterModel>();
-		
+
 		return users;
 	}
 	
@@ -64,9 +74,11 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	 */
 	@Override
 	public RegisterModel findByUsername(String username) 
-	{
+	{	
+		
 		//SQL String for finding a row with a matching username and password.
-		String sql = "SELECT * FROM USERS WHERE USERNAME = '" + username + "'";
+		String sql = "SELECT * FROM users WHERE USERNAME = '" + username + "'";
+		logger.info("SQL string is: " + sql);
 		
 		RegisterModel user = new RegisterModel(); 
 		
@@ -81,6 +93,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 				user.setId(srs.getInt("ID"));
 				user.setUsername(srs.getString("USERNAME"));
 				user.setPassword(srs.getString("PASSWORD"));
+				logger.info("User details found");
 				
 				//Send user back with username and password
 				return user;
@@ -88,6 +101,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 			else
 			{
 				//Send user with default credentials
+				logger.warn("No User Found");
 				return user;
 			}
 			
@@ -95,6 +109,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 		catch (Exception e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Login was unsuccessful");
 		}
 		
@@ -119,7 +134,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 				+"', '"+ registerModel.getEmail() +"', '"+ registerModel.getPhone() +"');";
 		
 		
-		
+		logger.info("SQL string is: " + sql);
 		//Try to add user to the database 
 		try
 		{
@@ -128,12 +143,14 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 			{
 				//Username and Email are free so insert user to database
 				jdbcTemplateObject.update(sql);
+				logger.info("User added");
 				
 				//Return 0 to represent the insert worked
 				return 0;
 			}
 			else
 			{
+				logger.warn("Cannot register user with taken credentials");
 				//Return 1 to represent email or username taken
 				return 1;
 			}
@@ -142,6 +159,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 		catch (Exception  e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Registration was unsuccessful");
 		}
 		
@@ -171,7 +189,8 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	public boolean checkAvailability(RegisterModel registerModel)
 	{
 		//SQL String that finds any row with the same username or email
-		String sql = "SELECT * FROM USERS WHERE USERNAME = '" + registerModel.getUsername() + "' OR Email = '" + registerModel.getEmail() + "'";
+		String sql = "SELECT * FROM users WHERE USERNAME = '" + registerModel.getUsername() + "' OR Email = '" + registerModel.getEmail() + "'";
+		logger.info("SQL string is: " + sql);
 		
 		//Try to check row
 		try
@@ -181,11 +200,13 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 			if(srs.next())
 			{
 				//Username or Email is taken
+				logger.warn("Email and Username taken");
 				return true;
 			}
 			else
 			{
 				//Username and Email are not taken
+				logger.info("Username and Email have not been taken");
 				return false;
 			}
 			
@@ -193,6 +214,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 		catch (Exception e)
 		{
 			///Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Registration was unsuccessful");
 		}
 		
@@ -214,6 +236,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 		
 		//SQL String that finds rows for 
 		String sql = "SELECT * FROM USERS WHERE USERNAME = '" + registerModel.getUsername() + "'";
+		logger.info("SQL string is: " + sql);
 		
 		//Try to run SQL Query
 		try
@@ -222,13 +245,14 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 			SqlRowSet srs = jdbcTemplateObject.queryForRowSet(sql);
 			if(srs.next())
 			{
-				
+				logger.info("Id Found");
 				//Returns users id for session
 				return srs.getInt("ID");
 			}
 			else
 			{
 				//Return a -1 if no user is found.
+				logger.warn("No user found");
 				return -1;
 			}
 			
@@ -236,6 +260,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 		catch (Exception e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Login was unsuccessful");
 		}
 		

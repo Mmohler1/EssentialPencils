@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -23,6 +25,9 @@ import com.gcu.utility.DatabaseException;
  */
 @Service
 public class UtensilDataService implements DataAccessInterface<UtensilModel>, UtensilDataAccessInterface<UtensilModel> {
+
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(UtensilDataService.class);
 
 	//Initialize the Data Source and JDBC
 	@SuppressWarnings("unused")
@@ -58,7 +63,8 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 
 		
 		//SQL String that creates a view of every row that matches the user's id. 
-		String sql = "SELECT * FROM UTENSILS WHERE USER_ID = '" + id + "'";
+		String sql = "SELECT * FROM utensils WHERE USER_ID = '" + id + "'";
+		logger.info("SQL string is: " + sql);
 		
 		//Initialize the list for the Utensil Models
 		List<UtensilModel> utensils = new ArrayList<UtensilModel>();
@@ -79,11 +85,13 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 											srs.getString("SIZE")));		
 			}	
 			
+			logger.info("Utensils list created for find");
 			return utensils;
 		}
 		catch (Exception e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down.");
 		}
 		
@@ -112,20 +120,22 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 												+ utensilModel.getColor() + "', '" 
 												+ utensilModel.getQuantity() + "', '" 
 												+ utensilModel.getSize() + "')";
+		logger.info("SQL string is: " + sql);
 		
 		//Try to create the utensil in the database. 
 		//Return 0 if update is successful, 1 if there was an error in the database.
 		try
 		{
 			//Adds the utensil to the database
-			
 			jdbcTemplateObject.update(sql);
+			logger.info("Utensil Added");
 			return 0; 
 		}
 		catch(Exception e)
 		{
 			
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Adding utensil was unsuccessful");
 		}
 		
@@ -142,32 +152,36 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	 * @return int Used to determine what to do
 	 */
 	@Override
-	public int update(UtensilModel utensilModel) {
+	public int update(UtensilModel utensilModel) 
+	{
 		//SQL string that inserts the variables for the utensil class.
-				String sql = "UPDATE `utensils` SET "
-						+ "`BRAND`='" + utensilModel.getBrand() + 
-						"',`TYPE`='" + utensilModel.getType() +
-						"',`COLOR`='" + utensilModel.getColor() + 
-						"', `QUANTITY`='" + utensilModel.getQuantity() + 
-						"',`SIZE`='" + utensilModel.getSize() +
-						"' WHERE UTENSIL_ID = " + utensilModel.getUtensilId() +
-						" AND USER_ID = " + utensilModel.getUserId() + ";";
-				
-				//Try to update the utensil in the database. 
-				//Return 0 if update is successful, 1 if there was an error in the database.
-				try
-				{
-					//Adds the utensil to the database
-					
-					jdbcTemplateObject.update(sql);
-					return 0; 
-				}
-				catch(Exception e)
-				{
-					
-					//Throw Database error
-					throw new DatabaseException("The Database is currently down. Updating the utensil was unsuccessful");
-				}
+		String sql = "UPDATE `utensils` SET "
+				+ "`BRAND`='" + utensilModel.getBrand() + 
+				"',`TYPE`='" + utensilModel.getType() +
+				"',`COLOR`='" + utensilModel.getColor() + 
+				"', `QUANTITY`='" + utensilModel.getQuantity() + 
+				"',`SIZE`='" + utensilModel.getSize() +
+				"' WHERE UTENSIL_ID = " + utensilModel.getUtensilId() +
+				" AND USER_ID = " + utensilModel.getUserId() + ";";
+		logger.info("SQL string is: " + sql);
+		
+		//Try to update the utensil in the database. 
+		//Return 0 if update is successful, 1 if there was an error in the database.
+		try
+		{
+			//Adds the utensil to the database
+			
+			jdbcTemplateObject.update(sql);
+			logger.info("Utensil Updated");
+			return 0; 
+		}
+		catch(Exception e)
+		{
+			
+			//Throw Database error
+			logger.error("Database Error");
+			throw new DatabaseException("The Database is currently down. Updating the utensil was unsuccessful");
+		}
 				
 
 	}
@@ -185,17 +199,19 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	{
 		
 		String sql = "DELETE FROM `utensils` WHERE UTENSIL_ID = " + utensilModel.getUtensilId() + " AND USER_ID = " + utensilModel.getUserId() + ";";
+		logger.info("SQL string is: " + sql);
 		
 		try
 		{
 			//If one row is effected then the utensil was deleted. If not, throw DatabaseException.
 			if(jdbcTemplateObject.update(sql) == 1)
 			{	
-				
+				logger.info("Utensil Deleted");
 				return 0; 
 			}
 			else
 			{
+				logger.warn("Utensil not deleted");
 				return 1;
 				
 			}
@@ -203,6 +219,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 		catch(Exception e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Deleting utensil was unsuccessful");
 		}
 	}
@@ -226,7 +243,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 		//SQL String that creates a view that searches every column
 		String sql = "SELECT * FROM utensils WHERE USER_ID = '" + id + "' AND (BRAND LIKE '%" + searchTerm + "%' OR TYPE LIKE '%" + searchTerm + "%' "
 				+ "OR COLOR LIKE '%" + searchTerm + "%' OR QUANTITY LIKE '%"+ searchTerm +"%' OR SIZE LIKE '%"+ searchTerm + "%');";
-		
+		logger.info("SQL string is: " + sql);
 		
 		//Initialize the list for the Utensil Models
 		List<UtensilModel> utensils = new ArrayList<UtensilModel>();
@@ -247,13 +264,14 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 											srs.getInt("QUANTITY"),
 											srs.getString("SIZE")));		
 			}	
-			
+			logger.info("Utensils list created for search");
 			return utensils;
 		}
 		catch (Exception e)
 		{
 			
 			//Throw Error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down. Utensils could not be searched");
 
 		}
@@ -272,35 +290,38 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	public List<UtensilModel> findRecentUtensils(int id) 
 	{
 		//SQL String that creates a view of every row that matches the user's id. 
-				String sql = "SELECT * FROM UTENSILS WHERE USER_ID = '" + id + "' ORDER BY UTENSIL_ID DESC LIMIT 3;";
-				
-				//Initialize the list for the Utensil Models
-				List<UtensilModel> utensils = new ArrayList<UtensilModel>();
-				
-				
-				//Try to make a list of utensils
-				try
-				{
-					//For every row in the table make a utensil and add it to a list.
-					SqlRowSet srs = jdbcTemplateObject.queryForRowSet(sql);
-					while(srs.next())
-					{
-						utensils.add(new UtensilModel(srs.getInt("UTENSIL_ID"),
-													srs.getInt("USER_ID"),
-													srs.getString("TYPE"),
-													srs.getString("BRAND"),
-													srs.getString("COLOR"),
-													srs.getInt("QUANTITY"),
-													srs.getString("SIZE")));		
-					}	
-					
-					return utensils;
-				}
-				catch (Exception e)
-				{
-					//Throw Database error
-					throw new DatabaseException("The Database is currently down.");
-				}
+		String sql = "SELECT * FROM utensils WHERE USER_ID = '" + id + "' ORDER BY UTENSIL_ID DESC LIMIT 3;";
+		logger.info("SQL string is: " + sql);
+		
+		//Initialize the list for the Utensil Models
+		List<UtensilModel> utensils = new ArrayList<UtensilModel>();
+		
+		
+		//Try to make a list of utensils
+		try
+		{
+			//For every row in the table make a utensil and add it to a list.
+			SqlRowSet srs = jdbcTemplateObject.queryForRowSet(sql);
+			while(srs.next())
+			{
+				utensils.add(new UtensilModel(srs.getInt("UTENSIL_ID"),
+											srs.getInt("USER_ID"),
+											srs.getString("TYPE"),
+											srs.getString("BRAND"),
+											srs.getString("COLOR"),
+											srs.getInt("QUANTITY"),
+											srs.getString("SIZE")));		
+			}	
+			
+			logger.info("Utensils list created for last 3 utensils");
+			return utensils;
+		}
+		catch (Exception e)
+		{
+			//Throw Database error
+			logger.error("Database Error");
+			throw new DatabaseException("The Database is currently down.");
+		}
 	}
 
 
@@ -315,7 +336,8 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	@Override
 	public UtensilModel findById(int id) {
 		
-		String sql = "SELECT * FROM UTENSILS WHERE UTENSIL_ID = '" + id + "';";
+		String sql = "SELECT * FROM utensils WHERE UTENSIL_ID = '" + id + "';";
+		logger.info("SQL string is: " + sql);
 		
 		UtensilModel utensil;
 		
@@ -335,10 +357,12 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 											srs.getInt("QUANTITY"),
 											srs.getString("SIZE"));		
 			
+				logger.info("Utensil created from id");
 				return utensil;
 			}
 			else
 			{
+				logger.warn("No Utensils Found");
 				return null;
 			}
 			
@@ -347,6 +371,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 		catch (Exception e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down.");
 		}
 	}
@@ -364,7 +389,8 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 
 		
 		//SQL String that creates a view of every row that matches the user's id. 
-		String sql = "SELECT * FROM UTENSILS";
+		String sql = "SELECT * FROM utensils";
+		logger.info("SQL string is: " + sql);
 		
 		//Initialize the list for the Utensil Models
 		List<UtensilModel> utensils = new ArrayList<UtensilModel>();
@@ -386,11 +412,13 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 											srs.getString("SIZE")));		
 			}	
 			
+			logger.info("Utensils list created for find all");
 			return utensils;
 		}
 		catch (Exception e)
 		{
 			//Throw Database error
+			logger.error("Database Error");
 			throw new DatabaseException("The Database is currently down.");
 		}
 		
