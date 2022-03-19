@@ -1,12 +1,13 @@
 package com.gcu.business;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gcu.data.DataAccessInterface;
-
 import com.gcu.model.RegisterModel;
 
 
@@ -20,10 +21,13 @@ import com.gcu.model.RegisterModel;
  */
 public class UserBusinessService implements UserBusinessServiceInterface {
 
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(UserBusinessService.class);
+
+		
 	@Autowired
 	private DataAccessInterface<RegisterModel> service;
-	
-	
+		
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
@@ -41,7 +45,10 @@ public class UserBusinessService implements UserBusinessServiceInterface {
 		RegisterModel newRegister = registerModel;
 		newRegister.setPassword(passwordEncoder.encode(registerModel.getPassword()));
 		
-		return service.create(newRegister);	
+		int errorNumber = service.create(newRegister);	
+		
+		logger.info("Error Number is " + errorNumber);
+		return errorNumber;
 	}
 	
 

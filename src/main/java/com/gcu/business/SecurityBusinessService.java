@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import com.gcu.data.UserDataAccessInterface;
 import com.gcu.model.LoginModel;
 import com.gcu.model.RegisterModel;
@@ -28,6 +29,9 @@ import com.gcu.model.RegisterModel;
  */
 public class SecurityBusinessService implements SecurityBusinessServiceInterface,  UserDetailsService {
 
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(SecurityBusinessService.class);
+	
 	@Autowired
 	private UserDataAccessInterface<RegisterModel> service;
 	
@@ -52,9 +56,11 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 		registerModel.setUsername(loginModel.getUsername());
 		registerModel.setPassword(loginModel.getPassword());
 		
-
+		int idNumber = service.findId(registerModel);
+		
 		//Return User ID if username is found
-		return service.findId(registerModel);
+		logger.info("User Id is " + idNumber);
+		return idNumber;
 
 	}
 	
@@ -74,7 +80,7 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 		//If user exists then send them back with granted authority
 		if(user != null)
 		{
-			
+			logger.info("User Found");
 			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 			authorities.add(new SimpleGrantedAuthority("USER"));
 			
@@ -88,6 +94,7 @@ public class SecurityBusinessService implements SecurityBusinessServiceInterface
 		else
 		{
 			//Throw Error, currently does not work. 
+			logger.error("User Not Found Error");
 			throw new UsernameNotFoundException("Username not found");
 		}
 	}

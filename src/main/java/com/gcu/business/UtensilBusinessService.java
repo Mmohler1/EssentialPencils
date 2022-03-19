@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.gcu.data.DataAccessInterface;
@@ -20,6 +22,9 @@ import com.gcu.model.UtensilModel;
  */
 public class UtensilBusinessService implements UtensilBusinessInterface {
 
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(UtensilBusinessService.class);
+		
 	@Autowired
 	private DataAccessInterface<UtensilModel> service;
 	
@@ -40,7 +45,9 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	{
 
 		//Call Service and return a number based on the result
-		return service.create(utsenislModel);
+		int errorNumber = service.create(utsenislModel);
+		logger.info("Error Number is " + errorNumber);
+		return errorNumber;
 
 
 	}
@@ -58,8 +65,8 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	{
 
 		//Return service
+		logger.info("Utensil List Created");
 		return service.findAll(id);
-
 
 	}
 	
@@ -77,7 +84,10 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	{
 
 		//Call Service and return a number based on the result
-		return service.update(utsenislModel);
+		int errorNumber = service.update(utsenislModel);
+		logger.info("Error Number is " + errorNumber);
+		
+		return errorNumber;
 
 
 	}
@@ -92,10 +102,12 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	@Override
 	public int eraseUtensil(UtensilModel utsenislModel) 
 	{
-
-		
+	
 		//Call Service and return a number based on the result
-		return service.delete(utsenislModel);
+		int errorNumber = service.delete(utsenislModel);
+		logger.info("Error Number is " + errorNumber);
+		
+		return errorNumber;
 	}
 	
 	
@@ -123,6 +135,7 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	 */
 	public List<UtensilModel> displayRecentUtensils(int id)
 	{
+		logger.info("Utensil List Created");
 		return serviceUtensil.findRecentUtensils(id);
 	}
 	
@@ -148,6 +161,7 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 		//If the size of the list is 0 then don't continue
 		if (utensilList.size() > 0)
 		{
+			logger.info("Utensil List is larger then 0");
 			int[] randomNum = new int[utensilList.size()];
 			int randomNumber;
 			
@@ -182,7 +196,7 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 			
 		}
 		
-		
+		logger.info("Random List Created");
 		return randomList;
 		
 	}
@@ -198,6 +212,7 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	@Override
 	public UtensilModel getUtensilById(int id) 
 	{
+		logger.info("Pulled One Utensil");
 		return serviceUtensil.findById(id);
 	}
 	
@@ -211,6 +226,7 @@ public class UtensilBusinessService implements UtensilBusinessInterface {
 	@Override
 	public List<UtensilModel> getEveryUtensil() 
 	{
+		logger.info("Pulled Every Utensil");
 		return serviceUtensil.findAllUtensils();
 	}
 
