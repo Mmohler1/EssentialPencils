@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import com.gcu.business.UtensilBusinessInterface;
-
 import com.gcu.model.UtensilModel;
 
 import org.springframework.ui.Model;
@@ -33,6 +34,9 @@ import org.springframework.ui.Model;
 @RequestMapping("/random")
 public class RandomController 
 {
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(RandomController.class);
+
 
 	//Full list of utensils that will be picked from at random
 	private List<UtensilModel> utensils = new ArrayList<UtensilModel>();
@@ -82,9 +86,13 @@ public class RandomController
 		
 		//Save user's id
 		int id = (int)session.getAttribute("id");
+
+		logger.info("User id is " + id);
 		
 		//Pulls quantity from utensil which represents the amount of random picks
 		int amount = utensilModel.getQuantity();
+		
+		logger.info("Amount is " + amount);
 		
 		if(amount <= 0)
 		{
@@ -97,6 +105,8 @@ public class RandomController
 			model.addAttribute("utensilModel", new UtensilModel());
 			model.addAttribute("errorMessage", errorMessage);
 			
+			logger.warn("Number was less then 1");
+			
 			return "random";
 		}
 		
@@ -105,12 +115,12 @@ public class RandomController
 		
 		randomUtensils = service.getRandomizedUtensil(utensils, amount);
 		
-		
 		//Loads utensil list into the pages view. 
 		model.addAttribute("title", "Random Page");
 		model.addAttribute("utensils", randomUtensils);
 		model.addAttribute("utensilModel", new UtensilModel());
 		
+		logger.info("Randomized List Returned");
 		return "random";
  
 	}

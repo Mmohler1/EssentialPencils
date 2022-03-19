@@ -5,9 +5,12 @@ package com.gcu.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.ui.Model;
 
 
@@ -25,6 +28,11 @@ import org.springframework.ui.Model;
 @RequestMapping("/")
 public class MainController 
 {
+	
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
+		
 	/**
 	 * Displays the main page to the user
 	 * 
@@ -61,7 +69,7 @@ public class MainController
 		}
 		catch(Exception e)
 		{
-			
+			logger.error("Couldn't get to login page");
 			//Take user to an error page
 			return "error";
 		}
@@ -84,7 +92,7 @@ public class MainController
 	}
 	
 	/**
-	 * Logs the user out and destroys theer session data
+	 * Logs the user out and destroys their session data. Not used
 	 * 
 	 * @param session Session data that will be removed
 	 * 
@@ -100,6 +108,8 @@ public class MainController
 			session.removeAttribute("username");
 			session.removeAttribute("id");
 			//Forwards to the display method in the register controller
+			
+			
 			return "redirect:/";
 		}
 		catch(Exception e)

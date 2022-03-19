@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +33,10 @@ import org.springframework.ui.Model;
 @RequestMapping("/search")
 public class SearchController 
 {
-	
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(SearchController.class);
+
+		
 	//The list of utensils that will be displayed to the user.
 	private List<UtensilModel> utensils = new ArrayList<UtensilModel>();
 	@Autowired
@@ -81,12 +86,18 @@ public class SearchController
 		int id = (int)session.getAttribute("id");
 		newUtensil.setUserId(id);
 		
+		logger.info("User Id is: " + id);
+		
 		//Pull the searchTerm from the firstName variable
 		String searchTerm = utensilModel.getType();		
+		
+		logger.info("Search Term is: " + searchTerm);
 		
 		//If user enters nothing then prevent their entire utensil list from showing
 		if(searchTerm == "")
 		{
+			logger.warn("Search Term is empty");
+			
 			//Make sure no utensil is shown
 			utensils = new ArrayList<UtensilModel>();
 			
@@ -103,6 +114,8 @@ public class SearchController
 		//If nothing is found
 		if (utensils.isEmpty())
 		{
+			logger.warn("No Untensil Was Found");
+			
 			//Make sure no utensil is shown
 			utensils = new ArrayList<UtensilModel>();
 			

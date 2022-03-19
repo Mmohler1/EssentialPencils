@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +35,10 @@ import org.springframework.ui.Model;
 @RequestMapping("/home")
 public class HomeController 
 {
-	
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
+		
 	//The list of utensils that will be displayed to the user.
 	private List<UtensilModel> utensils = new ArrayList<UtensilModel>();
 	
@@ -54,7 +59,12 @@ public class HomeController
 	{
 
 			int id = (int)session.getAttribute("id");
+			
+			logger.info("User id is " + id);
+			
 			utensils = service.displayRecentUtensils(id);
+			
+			
 			
 			//Display Home Page View
 			model.addAttribute("title", "Home");
@@ -119,8 +129,8 @@ public class HomeController
 	public String doRandom()
 	{
 
-			//Go to random page
-			return "forward:/random/";
+		//Go to random page
+		return "forward:/random/";
 
 	}
 }

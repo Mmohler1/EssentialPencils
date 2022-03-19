@@ -6,6 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,9 @@ import org.springframework.validation.BindingResult;
 @RequestMapping("/case")
 public class UtensilController 
 {
+	//For the logger
+	private static final Logger logger = LoggerFactory.getLogger(UtensilController.class);
+
 	
 	//The list of utensils that will be displayed to the user.
 	private List<UtensilModel> utensils = new ArrayList<UtensilModel>();
@@ -56,6 +61,7 @@ public class UtensilController
 
 
 			int id = (int)session.getAttribute("id");
+			logger.info("User id is: " + id );
 			
 			utensils = service.displayAllUtensils(id);
 			//Loads utensil list into the pages view. 
@@ -63,8 +69,6 @@ public class UtensilController
 			model.addAttribute("utensils", utensils);
 			model.addAttribute("utensilModel", new UtensilModel());
 			
-	
-	
 			return "case";
 	}
 	
@@ -81,13 +85,10 @@ public class UtensilController
 	public String goAdd(Model model)
 	{
 		
-
 			//Display Add Form View
 			model.addAttribute("title", "Add Utensil");
 			model.addAttribute("utensilModel", new UtensilModel());
 			
-	
-	
 			return "add";
 
 	}
@@ -105,15 +106,11 @@ public class UtensilController
 	public String goUpdate(UtensilModel utensilModel, Model model, BindingResult bindingResult)
 	{
 		
-
-
 			//Display Update Form View
 			model.addAttribute("title", "Update Utensil");
 			model.addAttribute("utensilModel", utensilModel);
 			
-	
 			return "update";
-
 	}
 	
 	
@@ -132,8 +129,6 @@ public class UtensilController
 			model.addAttribute("title", "Detailed Utensil");
 			model.addAttribute("utensilModel", utensilModel);
 			
-	
-	
 			return "detail";
 
 	}
@@ -161,21 +156,29 @@ public class UtensilController
 		//Check for Validation errors.
 		if(bindingResult.hasErrors())
 		{
+			logger.warn("Validation Errors Found");
+			
 			//If Errors were found take the user back to the add page.
 			model.addAttribute("title", "Add Utensil");
 			return "add";
 		}
 		else
 		{
+			logger.info("No Validation Errors Found");
+			
 			//If there were no errors then try to add utensil to the product list
 			
 			String errorMessage; //Initialize error message
 			//Call service once and save number to determine the action
 			int utensilNumber = service.insertUtensil(newUtensil);
 		
+			logger.info("Utensil Number is " + utensilNumber);
+			
 			//Based on number, either take user to case page or display error.
 			if (utensilNumber == 0)
 			{
+				logger.info("Utensil Was Created");
+				
 				//Refresh the utensil list
 				utensils = service.displayAllUtensils(id); 
 				
@@ -203,6 +206,9 @@ public class UtensilController
 			//If Errors were found take the user back to the add page.
 			model.addAttribute("title", "Add Utencil");
 			model.addAttribute("errorMessage", errorMessage);
+			
+			logger.warn("Error Found: " + errorMessage );
+			
 			return "add";
 
 		}
@@ -227,26 +233,35 @@ public class UtensilController
 		int id = (int)session.getAttribute("id");
 		newUtensil.setUserId(id);
 
+		logger.info("Utensil Id is: " + utensilModel.getUtensilId());
+		
 		//If no validation errors are found add to list and go to case page.
-
 		//Check for Validation errors.
 		if(bindingResult.hasErrors())
 		{
+			logger.warn("Validation Errors Found");
+			
 			//If Errors were found take the user back to the add page.
 			model.addAttribute("title", "Update Utencil");
 			return "update";
 		}
 		else
 		{
+			logger.info("No Validation Errors Found");
+			
 			//If there were no errors then try to add utensil to the product list
 			
 			String errorMessage; //Initialize error message
 			//Call service once and save number to determine the action
 			int utensilNumber = service.changeUtensil(newUtensil);
 		
+			logger.info("Utensil Number is " + utensilNumber);
+			
 			//Based on number, either take user to case page or display error.
 			if (utensilNumber == 0)
 			{
+				logger.info("Utensil Was Updated");
+				
 				//Refresh the utensil list
 				utensils = service.displayAllUtensils(id); 
 				
@@ -274,6 +289,9 @@ public class UtensilController
 			//If Errors were found take the user back to the add page.
 			model.addAttribute("title", "Update Utencil");
 			model.addAttribute("errorMessage", errorMessage);
+			
+			logger.warn("Error Found: " + errorMessage );
+			
 			return "update";
 
 		}
@@ -300,19 +318,23 @@ public class UtensilController
 		int id = (int)session.getAttribute("id");
 		newUtensil.setUserId(id);
 		
+		logger.info("Utensil Id is: " + utensilModel.getUtensilId());
 
 		//Call service once and save number to determine the action
 		int utensilNumber = service.eraseUtensil(newUtensil);
-	
+		
 		//Based on number, refresh case page
 		if (utensilNumber == 0)
 		{
+			logger.info("Utensil Deleted");
+			
 			//Refresh the utensil list
 			utensils = service.displayAllUtensils(id); 
 			
 		}
 		else
 		{
+			logger.error("Database Error");
 			throw new DatabaseException("Database is currently down. Could not delete utensil.");
 		}
 		
