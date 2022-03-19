@@ -45,11 +45,6 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	{
 		this.dataSource = dataSource;
 		this.jdbcTemplateObject = new JdbcTemplate(dataSource);
-		logger.info("Info: Hey");
-		logger.warn("Warning: Hi");
-		logger.trace("Trace: Yo");
-		logger.error("Error: F*ck off");
-		logger.debug("Debug: I'll look into his problem");
 		
 	}
 	
