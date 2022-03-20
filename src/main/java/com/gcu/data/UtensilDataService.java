@@ -63,7 +63,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 
 		
 		//SQL String that creates a view of every row that matches the user's id. 
-		String sql = "SELECT * FROM utensils WHERE USER_ID = '" + id + "'";
+		String sql = "SELECT * FROM UTENSILS WHERE USER_ID = '" + id + "'";
 		logger.info("SQL string is: " + sql);
 		
 		//Initialize the list for the Utensil Models
@@ -113,7 +113,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	{
 		
 		//SQL string that inserts the variables for the utensil class.
-		String sql = "INSERT INTO `utensils` (`UTENSIL_ID`, `USER_ID`, `BRAND`, `TYPE`, `COLOR`, `QUANTITY`, `SIZE`) VALUES (NULL, '"
+		String sql = "INSERT INTO `UTENSILS` (`UTENSIL_ID`, `USER_ID`, `BRAND`, `TYPE`, `COLOR`, `QUANTITY`, `SIZE`) VALUES (NULL, '"
 												+ utensilModel.getUserId() + "', '" 
 												+ utensilModel.getBrand() + "', '" 
 												+ utensilModel.getType() + "', '" 
@@ -155,7 +155,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	public int update(UtensilModel utensilModel) 
 	{
 		//SQL string that inserts the variables for the utensil class.
-		String sql = "UPDATE `utensils` SET "
+		String sql = "UPDATE `UTENSILS` SET "
 				+ "`BRAND`='" + utensilModel.getBrand() + 
 				"',`TYPE`='" + utensilModel.getType() +
 				"',`COLOR`='" + utensilModel.getColor() + 
@@ -198,7 +198,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	public int delete(UtensilModel utensilModel) 
 	{
 		
-		String sql = "DELETE FROM `utensils` WHERE UTENSIL_ID = " + utensilModel.getUtensilId() + " AND USER_ID = " + utensilModel.getUserId() + ";";
+		String sql = "DELETE FROM `UTENSILS` WHERE UTENSIL_ID = " + utensilModel.getUtensilId() + " AND USER_ID = " + utensilModel.getUserId() + ";";
 		logger.info("SQL string is: " + sql);
 		
 		try
@@ -241,7 +241,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 		
 		
 		//SQL String that creates a view that searches every column
-		String sql = "SELECT * FROM utensils WHERE USER_ID = '" + id + "' AND (BRAND LIKE '%" + searchTerm + "%' OR TYPE LIKE '%" + searchTerm + "%' "
+		String sql = "SELECT * FROM UTENSILS WHERE USER_ID = '" + id + "' AND (BRAND LIKE '%" + searchTerm + "%' OR TYPE LIKE '%" + searchTerm + "%' "
 				+ "OR COLOR LIKE '%" + searchTerm + "%' OR QUANTITY LIKE '%"+ searchTerm +"%' OR SIZE LIKE '%"+ searchTerm + "%');";
 		logger.info("SQL string is: " + sql);
 		
@@ -290,7 +290,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	public List<UtensilModel> findRecentUtensils(int id) 
 	{
 		//SQL String that creates a view of every row that matches the user's id. 
-		String sql = "SELECT * FROM utensils WHERE USER_ID = '" + id + "' ORDER BY UTENSIL_ID DESC LIMIT 3;";
+		String sql = "SELECT * FROM UTENSILS WHERE USER_ID = '" + id + "' ORDER BY UTENSIL_ID DESC LIMIT 3;";
 		logger.info("SQL string is: " + sql);
 		
 		//Initialize the list for the Utensil Models
@@ -336,7 +336,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 	@Override
 	public UtensilModel findById(int id) {
 		
-		String sql = "SELECT * FROM utensils WHERE UTENSIL_ID = '" + id + "';";
+		String sql = "SELECT * FROM UTENSILS WHERE UTENSIL_ID = '" + id + "';";
 		logger.info("SQL string is: " + sql);
 		
 		UtensilModel utensil;
@@ -389,7 +389,7 @@ public class UtensilDataService implements DataAccessInterface<UtensilModel>, Ut
 
 		
 		//SQL String that creates a view of every row that matches the user's id. 
-		String sql = "SELECT * FROM utensils";
+		String sql = "SELECT * FROM UTENSILS";
 		logger.info("SQL string is: " + sql);
 		
 		//Initialize the list for the Utensil Models

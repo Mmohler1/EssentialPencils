@@ -72,7 +72,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	{	
 		
 		//SQL String for finding a row with a matching username and password.
-		String sql = "SELECT * FROM users WHERE USERNAME = '" + username + "'";
+		String sql = "SELECT * FROM USERS WHERE USERNAME = '" + username + "'";
 		logger.info("SQL string is: " + sql);
 		
 		RegisterModel user = new RegisterModel(); 
@@ -123,7 +123,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	public int create(RegisterModel registerModel)
 	{
 		//SQL string that inserts the user into the database
-		String sql = "INSERT INTO `users` (`ID`, `USERNAME`, `PASSWORD`, `FIRST_NAME`, `LAST_NAME`, `EMAIL`, `PHONE`) VALUES (NULL, '"
+		String sql = "INSERT INTO `USERS` (`ID`, `USERNAME`, `PASSWORD`, `FIRST_NAME`, `LAST_NAME`, `EMAIL`, `PHONE`) VALUES (NULL, '"
 				+ registerModel.getUsername() + "', '" + registerModel.getPassword() +"', '"
 				+ registerModel.getFirstName()+"', '"+ registerModel.getLastName() 
 				+"', '"+ registerModel.getEmail() +"', '"+ registerModel.getPhone() +"');";
@@ -184,7 +184,7 @@ public class UsersDataService implements UserDataAccessInterface<RegisterModel>,
 	public boolean checkAvailability(RegisterModel registerModel)
 	{
 		//SQL String that finds any row with the same username or email
-		String sql = "SELECT * FROM users WHERE USERNAME = '" + registerModel.getUsername() + "' OR Email = '" + registerModel.getEmail() + "'";
+		String sql = "SELECT * FROM USERS WHERE USERNAME = '" + registerModel.getUsername() + "' OR Email = '" + registerModel.getEmail() + "'";
 		logger.info("SQL string is: " + sql);
 		
 		//Try to check row
